@@ -9,122 +9,212 @@
     @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
     :root {
-      --bg-1: #0f172a;
-      --bg-2: #1e293b;
-      --accent: #38bdf8;
-      --accent-2: #8b5cf6;
-      --good: #10b981;
-      --warn: #f59e0b;
-      --bad: #f43f5e;
-      --card: rgba(15, 23, 42, 0.72);
-      --stroke: rgba(255,255,255,0.1);
+      --bg: #0b1120;
+      --panel: rgba(15, 23, 42, 0.82);
+      --panel-2: rgba(30, 41, 59, 0.85);
+      --stroke: rgba(255,255,255,0.08);
       --text: #e2e8f0;
       --muted: #94a3b8;
+      --cyan: #22d3ee;
+      --blue: #3b82f6;
+      --violet: #8b5cf6;
+      --green: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
     }
 
     * { box-sizing: border-box; }
 
-    html, body {
-      min-height: 100%;
+    body {
       margin: 0;
+      min-height: 100vh;
       font-family: 'Outfit', sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.18), transparent 26%),
-        radial-gradient(circle at 90% 10%, rgba(139, 92, 246, 0.18), transparent 24%),
-        radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.14), transparent 20%),
-        linear-gradient(135deg, #020617 0%, #0f172a 35%, #111827 100%);
-      background-attachment: fixed;
+        radial-gradient(circle at 50% 10%, rgba(34,211,238,0.12), transparent 20%),
+        radial-gradient(circle at 10% 90%, rgba(139,92,246,0.10), transparent 22%),
+        linear-gradient(to bottom, #020617 0%, #0b1120 35%, #111827 100%);
       overflow-x: hidden;
     }
 
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
-      background-size: 34px 34px;
-      mask-image: radial-gradient(circle at center, black 45%, transparent 95%);
-      opacity: 0.35;
+    /* Raum-Atmosphäre */
+    .room-stage {
+      position: relative;
+      min-height: 100vh;
+      padding: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .glass-panel {
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.62));
+    .room-stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,0.03), transparent 20%),
+        linear-gradient(to top, rgba(255,255,255,0.02), transparent 20%);
+      pointer-events: none;
+    }
+
+    .room-stage::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: min(1200px, 96vw);
+      height: 100%;
+      background:
+        linear-gradient(90deg,
+          rgba(255,255,255,0.02) 0%,
+          rgba(255,255,255,0.00) 8%,
+          rgba(255,255,255,0.00) 92%,
+          rgba(255,255,255,0.02) 100%);
+      box-shadow:
+        inset 240px 0 220px rgba(0,0,0,0.35),
+        inset -240px 0 220px rgba(0,0,0,0.35);
+      pointer-events: none;
+    }
+
+    .game-shell {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .glass {
+      background: linear-gradient(180deg, var(--panel), rgba(15, 23, 42, 0.72));
       backdrop-filter: blur(18px);
       -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--stroke);
       box-shadow:
-        0 20px 60px rgba(2, 6, 23, 0.45),
-        inset 0 1px 0 rgba(255,255,255,0.06);
+        0 20px 60px rgba(0,0,0,0.45),
+        inset 0 1px 0 rgba(255,255,255,0.05);
     }
 
-    .glow-ring {
+    .fade-slide {
+      animation: fadeSlide .45s ease;
+    }
+
+    @keyframes fadeSlide {
+      from { opacity: 0; transform: translateY(18px) scale(0.985); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .door-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .door {
+      width: 82px;
+      height: 110px;
+      border-radius: 18px 18px 10px 10px;
       position: relative;
-      isolation: isolate;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)),
+        linear-gradient(135deg, rgba(34,211,238,0.08), rgba(139,92,246,0.08));
+      border: 1px solid rgba(255,255,255,0.10);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #cbd5e1;
+      font-weight: 800;
+      letter-spacing: .08em;
+      transition: all .25s ease;
+      overflow: hidden;
     }
 
-    .glow-ring::before {
+    .door::before {
       content: "";
       position: absolute;
-      inset: -1px;
-      border-radius: inherit;
-      padding: 1px;
-      background: linear-gradient(135deg, rgba(56,189,248,0.6), rgba(139,92,246,0.4), rgba(16,185,129,0.4));
-      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      z-index: -1;
-      opacity: 0.9;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 34px;
+      height: 50px;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.03);
     }
 
-    .fade-in {
-      animation: fadeIn 0.45s ease-out forwards;
+    .door::after {
+      content: "";
+      position: absolute;
+      right: 15px;
+      top: 53px;
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.25);
     }
 
-    .pop-in {
-      animation: popIn 0.35s ease-out forwards;
+    .door.done {
+      background:
+        linear-gradient(180deg, rgba(16,185,129,0.28), rgba(16,185,129,0.12));
+      color: white;
+      box-shadow: 0 0 30px rgba(16,185,129,0.18);
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(14px); }
-      to { opacity: 1; transform: translateY(0); }
+    .door.active {
+      transform: translateY(-4px) scale(1.03);
+      background:
+        linear-gradient(180deg, rgba(34,211,238,0.26), rgba(139,92,246,0.18));
+      color: white;
+      box-shadow: 0 0 36px rgba(34,211,238,0.20);
+      border-color: rgba(34,211,238,0.35);
     }
 
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.97); }
-      to { opacity: 1; transform: scale(1); }
+    .room-card {
+      border-radius: 32px;
+      padding: 28px;
     }
 
-    .health-bar-transition {
-      transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1), background 0.3s ease;
+    .case-panel, .question-panel, .option-card {
+      border-radius: 26px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+    }
+
+    .case-panel {
+      padding: 24px;
+      background:
+        linear-gradient(180deg, rgba(34,211,238,0.08), rgba(255,255,255,0.03));
+    }
+
+    .question-panel {
+      padding: 24px;
+      background:
+        linear-gradient(180deg, rgba(139,92,246,0.10), rgba(255,255,255,0.03));
     }
 
     .option-card {
+      padding: 18px;
+      cursor: pointer;
+      transition: .22s ease;
       position: relative;
       overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
-      transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
-      cursor: pointer;
+    }
+
+    .option-card:hover {
+      transform: translateY(-2px) scale(1.01);
+      border-color: rgba(34,211,238,0.35);
+      background:
+        linear-gradient(180deg, rgba(34,211,238,0.12), rgba(255,255,255,0.05));
+      box-shadow: 0 14px 28px rgba(0,0,0,0.20);
     }
 
     .option-card::before {
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.08) 45%, transparent 100%);
+      background: linear-gradient(110deg, transparent, rgba(255,255,255,0.08), transparent);
       transform: translateX(-120%);
-      transition: transform 0.6s ease;
-    }
-
-    .option-card:hover {
-      transform: translateY(-2px) scale(1.01);
-      border-color: rgba(56,189,248,0.45);
-      box-shadow: 0 14px 32px rgba(2, 132, 199, 0.16);
-      background: linear-gradient(180deg, rgba(56,189,248,0.1), rgba(255,255,255,0.04));
+      transition: transform .6s ease;
     }
 
     .option-card:hover::before {
@@ -132,178 +222,162 @@
     }
 
     .option-letter {
-      min-width: 44px;
-      min-height: 44px;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
       display: grid;
       place-items: center;
-      border-radius: 14px;
-      background: linear-gradient(180deg, rgba(56,189,248,0.22), rgba(59,130,246,0.12));
-      border: 1px solid rgba(56,189,248,0.25);
-      color: #e0f2fe;
       font-weight: 800;
-      letter-spacing: 0.04em;
-      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+      background: linear-gradient(180deg, rgba(34,211,238,0.22), rgba(59,130,246,0.12));
+      border: 1px solid rgba(34,211,238,0.25);
+      color: #e0f2fe;
+      flex-shrink: 0;
     }
 
-    .chip {
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 14px;
+      border-radius: 999px;
       border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.05);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .22em;
       color: #cbd5e1;
     }
 
-    .progress-dot {
+    .pulse-dot {
       width: 10px;
       height: 10px;
       border-radius: 999px;
-      background: rgba(255,255,255,0.18);
-      transition: all 0.3s ease;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+      background: var(--green);
+      box-shadow: 0 0 0 0 rgba(16,185,129,0.65);
+      animation: pulse 2s infinite;
     }
 
-    .progress-dot.active {
-      width: 30px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #38bdf8, #8b5cf6);
-      box-shadow: 0 0 20px rgba(56,189,248,0.35);
-    }
-
-    .progress-dot.done {
-      background: rgba(16,185,129,0.9);
-      box-shadow: 0 0 16px rgba(16,185,129,0.28);
-    }
-
-    .pulse-orb {
-      width: 12px;
-      height: 12px;
-      border-radius: 999px;
-      background: #10b981;
-      box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
-      animation: pulseOrb 2s infinite;
-    }
-
-    @keyframes pulseOrb {
-      0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.45); }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
       70% { box-shadow: 0 0 0 12px rgba(16,185,129,0); }
       100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
     }
 
-    .btn-primary {
-      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
-      color: white;
-      box-shadow: 0 18px 30px rgba(56,189,248,0.2);
-      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    .bar-track {
+      height: 18px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
     }
 
-    .btn-primary:hover {
+    .bar-fill {
+      height: 100%;
+      width: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #10b981, #34d399, #6ee7b7);
+      box-shadow: 0 0 20px rgba(16,185,129,0.35);
+      transition: width .8s cubic-bezier(.65,0,.35,1), background .3s ease;
+    }
+
+    .btn-main {
+      width: 100%;
+      border: 0;
+      border-radius: 20px;
+      padding: 16px 20px;
+      font-size: 18px;
+      font-weight: 800;
+      color: white;
+      cursor: pointer;
+      transition: .2s ease;
+      background: linear-gradient(135deg, #22d3ee, #8b5cf6);
+      box-shadow: 0 16px 30px rgba(34,211,238,0.18);
+    }
+
+    .btn-main:hover {
       transform: translateY(-1px);
-      box-shadow: 0 22px 36px rgba(56,189,248,0.28);
     }
 
     .btn-secondary {
-      background: rgba(255,255,255,0.06);
-      color: white;
-      border: 1px solid rgba(255,255,255,0.08);
-      transition: transform 0.2s ease, background 0.2s ease;
-    }
-
-    .btn-secondary:hover {
-      transform: translateY(-1px);
-      background: rgba(255,255,255,0.1);
-    }
-
-    .wellbeing-shell {
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .wellbeing-track {
       background: rgba(255,255,255,0.08);
-      box-shadow: inset 0 2px 8px rgba(2,6,23,0.28);
+      box-shadow: none;
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
-    .wellbeing-fill {
-      background: linear-gradient(90deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
-      box-shadow: 0 0 24px rgba(16,185,129,0.35);
-    }
-
-    .wellbeing-fill.warn {
-      background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
-      box-shadow: 0 0 24px rgba(245,158,11,0.28);
-    }
-
-    .wellbeing-fill.bad {
-      background: linear-gradient(90deg, #f43f5e 0%, #fb7185 100%);
-      box-shadow: 0 0 24px rgba(244,63,94,0.28);
+    @media (max-width: 900px) {
+      .door {
+        width: 62px;
+        height: 88px;
+        font-size: 12px;
+      }
     }
   </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4 md:p-8">
-  <div id="game-container" class="max-w-5xl w-full fade-in">
-
-    <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-6 mb-6">
-      <div class="glass-panel glow-ring rounded-[32px] p-6 md:p-7">
-        <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
-          <div>
-            <div class="inline-flex items-center gap-2 chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] mb-4">
-              <span class="pulse-orb"></span>
-              Simulationsmodus aktiv
-            </div>
-            <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">Escape Room: Modul C2</h1>
-            <p class="text-slate-300 mt-2 text-sm md:text-base">Onkologie, Schmerzmanagement und klinische Entscheidungen für FaGe-Lernende</p>
-          </div>
-          <div id="room-badge" class="rounded-2xl px-5 py-3 bg-white/6 border border-white/10 text-white font-bold tracking-[0.18em] text-sm shadow-2xl">
-            RAUM 1 / 5
-          </div>
-        </div>
-
-        <div class="flex flex-wrap gap-2 mb-6" id="progress-dots"></div>
-
-        <div class="wellbeing-shell rounded-3xl p-4 md:p-5">
-          <div class="flex items-center justify-between gap-4 mb-3">
+<body>
+  <div class="room-stage">
+    <div class="game-shell">
+      <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-6 mb-6">
+        
+        <div class="glass room-card">
+          <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
             <div>
-              <div class="text-xs uppercase tracking-[0.25em] font-bold text-slate-400">Patienten-Wohlbefinden</div>
-              <div class="text-sm text-slate-300 mt-1">Jede Entscheidung beeinflusst Sicherheit und Versorgung.</div>
+              <div class="status-pill mb-4">
+                <span class="pulse-dot"></span>
+                Escape-Simulation aktiv
+              </div>
+              <h1 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">FaGe Escape Room</h1>
+              <p class="text-slate-300 mt-2">Du bewegst dich von Raum zu Raum und triffst klinische Entscheidungen.</p>
             </div>
-            <div id="wellbeing-percent" class="text-3xl font-black text-white">100%</div>
+            <div id="room-badge" class="status-pill">Raum 1 / 5</div>
           </div>
-          <div class="wellbeing-track rounded-full h-5 p-1 overflow-hidden">
-            <div id="health-bar" class="health-bar-transition wellbeing-fill h-full rounded-full" style="width: 100%"></div>
+
+          <div class="door-row mb-6" id="door-progress"></div>
+
+          <div class="rounded-[26px] p-5 border border-white/10 bg-white/5">
+            <div class="flex justify-between items-end mb-3">
+              <div>
+                <div class="text-xs uppercase tracking-[0.25em] font-bold text-slate-400">Patienten-Wohlbefinden</div>
+                <div class="text-sm text-slate-300 mt-1">Deine Antworten beeinflussen die Stabilität des Patienten.</div>
+              </div>
+              <div id="wellbeing-percent" class="text-3xl font-black text-white">100%</div>
+            </div>
+            <div class="bar-track">
+              <div id="health-bar" class="bar-fill"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass room-card">
+          <div class="text-xs uppercase tracking-[0.25em] font-bold text-slate-400 mb-4">Flurübersicht</div>
+          <div class="space-y-4 text-slate-300">
+            <div class="rounded-2xl p-4 bg-white/5 border border-white/10">
+              <span class="font-bold text-white">Raumprinzip:</span> Jeder Raum enthält einen Fall, eine Kernfrage und mehrere Wege.
+            </div>
+            <div class="rounded-2xl p-4 bg-white/5 border border-white/10">
+              <span class="font-bold text-white">Richtige Entscheidung:</span> Tür öffnet sich, du gehst weiter.
+            </div>
+            <div class="rounded-2xl p-4 bg-white/5 border border-white/10">
+              <span class="font-bold text-white">Falsche Entscheidung:</span> Warnhinweis erscheint, du musst im Raum bleiben.
+            </div>
           </div>
         </div>
       </div>
 
-      <div class="glass-panel rounded-[32px] p-6 md:p-7">
-        <div class="text-xs uppercase tracking-[0.25em] font-bold text-slate-400 mb-4">Mission Briefing</div>
-        <div class="space-y-4 text-slate-300 leading-relaxed text-sm md:text-base">
-          <div class="chip rounded-2xl px-4 py-3">
-            <span class="font-bold text-white">Ziel:</span> Räume mit fachlich korrekten Entscheidungen abschliessen.
-          </div>
-          <div class="chip rounded-2xl px-4 py-3">
-            <span class="font-bold text-white">Gefahr:</span> Falsche Antworten senken das Wohlbefinden des Patienten.
-          </div>
-          <div class="chip rounded-2xl px-4 py-3">
-            <span class="font-bold text-white">Bonus:</span> Richtige Antworten stabilisieren den Patienten und bringen dich ins nächste Level.
-          </div>
-        </div>
-      </div>
-    </div>
+      <div id="room-content" class="glass room-card fade-slide min-h-[520px]"></div>
 
-    <div id="room-content" class="glass-panel glow-ring rounded-[32px] p-6 md:p-8 min-h-[500px] flex flex-col pop-in">
-      <!-- Dynamic content -->
-    </div>
-
-    <div id="feedback-overlay" class="mt-6 hidden fade-in">
-      <div id="feedback-card" class="glass-panel rounded-[32px] p-6 md:p-8 shadow-2xl border-l-[10px]">
-        <div class="flex items-start gap-4 mb-4">
-          <div id="feedback-icon" class="text-5xl leading-none"></div>
-          <div>
-            <div id="feedback-title" class="text-2xl font-extrabold mb-2 text-white"></div>
-            <p id="feedback-text" class="text-slate-300 leading-relaxed text-base md:text-lg"></p>
+      <div id="feedback-overlay" class="mt-6 hidden fade-slide">
+        <div id="feedback-card" class="glass room-card border-l-[10px]">
+          <div class="flex items-start gap-4 mb-4">
+            <div id="feedback-icon" class="text-5xl leading-none"></div>
+            <div>
+              <div id="feedback-title" class="text-2xl font-extrabold mb-2 text-white"></div>
+              <p id="feedback-text" class="text-slate-300 leading-relaxed text-lg"></p>
+            </div>
           </div>
+          <button id="action-btn" class="btn-main mt-6">Weiter</button>
         </div>
-        <button id="action-btn" class="w-full mt-6 rounded-2xl py-4 px-6 font-bold text-lg btn-primary">
-          Weiter
-        </button>
       </div>
     </div>
   </div>
@@ -323,12 +397,12 @@
           {
             text: "Neuropathischer Schmerz; verursacht durch die Schädigung oder Kompression von Nervenstrukturen.",
             correct: true,
-            feedback: "Richtig! Die beschriebene Qualität (brennend, einschiessend) ist typisch für neuropathischen Schmerz. In der Onkologie geschieht dies oft durch das Einwachsen oder Drücken des Tumors auf Nervenbahnen."
+            feedback: "Richtig! Die beschriebene Qualität ist typisch für neuropathischen Schmerz. In der Onkologie geschieht dies oft durch das Einwachsen oder Drücken des Tumors auf Nervenbahnen."
           },
           {
             text: "Psychosomatischer Schmerz; bedingt durch die psychische Belastung der Diagnose.",
             correct: false,
-            feedback: "Falsch. Auch wenn Krebs psychisch belastend ist, haben diese spezifischen Symptome eine klare physiologische Ursache im Nervensystem (Nervenschädigung)."
+            feedback: "Falsch. Auch wenn Krebs psychisch belastend ist, haben diese Symptome hier eine klare physiologische Ursache im Nervensystem."
           }
         ]
       },
@@ -340,39 +414,39 @@
           {
             text: "Mechanorezeptoren; wir nutzen die Visuelle Analogskala (VAS).",
             correct: false,
-            feedback: "Nicht ganz. Mechanorezeptoren reagieren auf Druck. Die VAS ist zwar möglich, aber die Numerische Rating-Skala (NRS) ist im klinischen Alltag oft noch praktikabler."
+            feedback: "Nicht ganz. Mechanorezeptoren reagieren auf Druck. Die VAS ist möglich, aber im klinischen Alltag ist die NRS oft praktikabler."
           },
           {
             text: "Nozizeptoren; wir nutzen die Numerische Rating-Skala (NRS 0-10).",
             correct: true,
-            feedback: "Exzellent! Nozizeptoren sind die freien Nervenendigungen, die Schmerzreize aufnehmen. Die NRS ist das Standardinstrument für das Assessment der Schmerzintensität."
+            feedback: "Exzellent! Nozizeptoren nehmen Schmerzreize auf. Die NRS ist das Standardinstrument für die Schmerzintensität."
           },
           {
             text: "Propriozeptoren; wir nutzen das BESD-Instrument.",
             correct: false,
-            feedback: "Falsch. Propriozeptoren dienen der Eigenwahrnehmung des Körpers. BESD wird bei Menschen mit Demenz eingesetzt, nicht bei kognitiv fitten Patienten."
+            feedback: "Falsch. Propriozeptoren dienen der Eigenwahrnehmung des Körpers. BESD wird eher bei Menschen mit kognitiven Einschränkungen verwendet."
           }
         ]
       },
       {
         title: "Raum 3: WHO-Stufenschema & Opioide",
-        description: "Der Patient hat starke Schmerzen (NRS 8). Er wird gemäss WHO-Stufe 3 mit starken Opioiden (z.B. Morphin) behandelt.",
-        question: "Als FaGe überwachst du die Therapie. Welche Nebenwirkung tritt bei Opioiden fast ausnahmslos auf und erfordert eine pflegerische Intervention?",
+        description: "Der Patient hat starke Schmerzen (NRS 8). Er wird gemäss WHO-Stufe 3 mit starken Opioiden behandelt.",
+        question: "Welche Nebenwirkung tritt bei Opioiden fast ausnahmslos auf und erfordert eine pflegerische Intervention?",
         options: [
           {
             text: "Obstipation (Verstopfung).",
             correct: true,
-            feedback: "Richtig! Opioide hemmen die Darmperistaltik. Deshalb muss ab dem ersten Tag der Opioidgabe eine konsequente Obstipationsprophylaxe (z.B. Laxantien, Bewegung) durchgeführt werden."
+            feedback: "Richtig! Opioide hemmen die Darmperistaltik. Deshalb ist ab Beginn der Therapie eine konsequente Obstipationsprophylaxe wichtig."
           },
           {
             text: "Atembeschleunigung (Tachypnoe).",
             correct: false,
-            feedback: "Falsch. Opioide können bei Überdosierung eher eine Atemdepression (verlangsamte Atmung) auslösen, aber keine Beschleunigung."
+            feedback: "Falsch. Bei Überdosierung droht eher eine Atemdepression als eine Atembeschleunigung."
           },
           {
             text: "Heisshungerattacken.",
             correct: false,
-            feedback: "Falsch. Eher sind Übelkeit und Erbrechen zu Beginn der Therapie häufige Nebenwirkungen, nicht Heisshunger."
+            feedback: "Falsch. Typischer sind Übelkeit, Erbrechen und vor allem Obstipation."
           }
         ]
       },
@@ -384,39 +458,39 @@
           {
             text: "Blutdruckmessungen nur noch am betroffenen Arm durchführen.",
             correct: false,
-            feedback: "Absolut falsch! Das ist lebensgefährlich für das Gewebe. Jede Abschnürung oder Verletzung am betroffenen Arm kann ein irreversibles Lymphödem auslösen."
+            feedback: "Absolut falsch. Jede Abschnürung oder Verletzung am betroffenen Arm kann ein Lymphödem begünstigen."
           },
           {
             text: "Den Arm hochlagern und Blutentnahmen an dieser Seite strikt vermeiden.",
             correct: true,
-            feedback: "Richtig! Der Arm muss vor Stauung (Blutdruckmanschette) und Infektionen (Blutentnahme) geschützt werden. Hochlagerung fördert den Abfluss."
+            feedback: "Richtig! Der Arm muss vor Stauung und Infektionen geschützt werden. Hochlagerung fördert den Abfluss."
           },
           {
             text: "Kräftige Massagen des Arms zur Durchblutungsförderung.",
             correct: false,
-            feedback: "Falsch. Nur eine spezialisierte manuelle Lymphdrainage ist erlaubt. Normale Massagen können den Lymphstau verschlimmern."
+            feedback: "Falsch. Normale Massagen können den Lymphstau verschlimmern. Erlaubt ist nur spezialisierte Lymphdrainage."
           }
         ]
       },
       {
         title: "Raum 5: Ethik in der Onkologie",
         description: "Ein Patient im Endstadium eines Prostatakarzinoms lehnt eine lebensverlängernde Massnahme ab. Er möchte lieber nach Hause.",
-        question: "Welches ethische Prinzip steht hier im Vordergrund, wenn wir seine Entscheidung respektieren?",
+        question: "Welches ethische Prinzip steht im Vordergrund, wenn wir seine Entscheidung respektieren?",
         options: [
           {
             text: "Prinzip der Gerechtigkeit.",
             correct: false,
-            feedback: "Nicht zutreffend. Gerechtigkeit bezieht sich auf die faire Verteilung von Pflege und Ressourcen."
+            feedback: "Nicht passend. Gerechtigkeit bezieht sich vor allem auf faire Verteilung und Gleichbehandlung."
           },
           {
             text: "Prinzip der Autonomie (Selbstbestimmung).",
             correct: true,
-            feedback: "Korrekt! Die Autonomie ist das Recht des Patienten, über seinen eigenen Körper und seine Behandlung zu entscheiden – auch gegen medizinischen Rat."
+            feedback: "Korrekt! Die Autonomie beschreibt das Recht des urteilsfähigen Patienten, über seinen Körper und seine Behandlung zu entscheiden."
           },
           {
             text: "Prinzip der Nicht-Schädigung gegen den Patientenwillen.",
             correct: false,
-            feedback: "Falsch. Das Prinzip besagt zwar 'Nicht schaden', aber die Autonomie des urteilsfähigen Patienten überwiegt hier die medizinische Sichtweise."
+            feedback: "Falsch. Hier überwiegt die Selbstbestimmung des urteilsfähigen Patienten."
           }
         ]
       }
@@ -435,14 +509,14 @@
     const healthBar = document.getElementById('health-bar');
     const wellbeingPercent = document.getElementById('wellbeing-percent');
     const roomBadge = document.getElementById('room-badge');
-    const progressDots = document.getElementById('progress-dots');
+    const doorProgress = document.getElementById('door-progress');
 
-    function renderProgressDots() {
-      progressDots.innerHTML = gameData.map((_, i) => {
-        let cls = 'progress-dot';
+    function renderDoors() {
+      doorProgress.innerHTML = gameData.map((_, i) => {
+        let cls = 'door';
         if (i < currentRoomIndex) cls += ' done';
         if (i === currentRoomIndex) cls += ' active';
-        return `<div class="${cls}"></div>`;
+        return `<div class="${cls}">${i + 1}</div>`;
       }).join('');
     }
 
@@ -451,13 +525,12 @@
       healthBar.style.width = wellbeing + '%';
       wellbeingPercent.innerText = wellbeing + '%';
 
-      healthBar.className = 'health-bar-transition h-full rounded-full';
       if (wellbeing > 60) {
-        healthBar.classList.add('wellbeing-fill');
+        healthBar.style.background = 'linear-gradient(90deg, #10b981, #34d399, #6ee7b7)';
       } else if (wellbeing > 30) {
-        healthBar.classList.add('wellbeing-fill', 'warn');
+        healthBar.style.background = 'linear-gradient(90deg, #f59e0b, #fbbf24)';
       } else {
-        healthBar.classList.add('wellbeing-fill', 'bad');
+        healthBar.style.background = 'linear-gradient(90deg, #f43f5e, #fb7185)';
       }
 
       if (wellbeing <= 0) gameOver();
@@ -465,43 +538,41 @@
 
     function renderRoom() {
       const data = gameData[currentRoomIndex];
-      roomBadge.innerText = `RAUM ${currentRoomIndex + 1} / ${gameData.length}`;
-      renderProgressDots();
+      roomBadge.innerText = `Raum ${currentRoomIndex + 1} / ${gameData.length}`;
+      renderDoors();
 
       roomContent.innerHTML = `
-        <div class="flex flex-col h-full pop-in">
+        <div class="fade-slide">
           <div class="flex flex-wrap items-start justify-between gap-4 mb-8">
             <div>
-              <div class="inline-flex items-center gap-2 chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] mb-4">Klinischer Entscheidungsraum</div>
-              <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">${data.title}</h2>
+              <div class="status-pill mb-4">Du betrittst den nächsten Raum</div>
+              <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight">${data.title}</h2>
             </div>
-            <div class="chip rounded-2xl px-4 py-3 text-sm font-semibold">Schwierigkeit steigt</div>
+            <div class="status-pill">Tür ${currentRoomIndex + 1}</div>
           </div>
 
-          <div class="grid md:grid-cols-[1.15fr_0.85fr] gap-6 flex-grow">
-            <div class="rounded-[28px] p-6 border border-white/10 bg-white/5">
-              <div class="text-xs uppercase tracking-[0.25em] font-bold text-sky-300 mb-4">Fallsituation</div>
-              <p class="text-slate-200 leading-relaxed text-base md:text-lg">${data.description}</p>
+          <div class="grid md:grid-cols-[1.1fr_0.9fr] gap-6 mb-8">
+            <div class="case-panel">
+              <div class="text-xs uppercase tracking-[0.25em] font-bold text-cyan-300 mb-4">Fallsituation im Raum</div>
+              <p class="text-slate-200 leading-relaxed text-lg">${data.description}</p>
             </div>
 
-            <div class="rounded-[28px] p-6 border border-white/10 bg-gradient-to-br from-sky-500/10 to-violet-500/10">
-              <div class="text-xs uppercase tracking-[0.25em] font-bold text-violet-300 mb-4">Deine Aufgabe</div>
+            <div class="question-panel">
+              <div class="text-xs uppercase tracking-[0.25em] font-bold text-violet-300 mb-4">Rätsel / Entscheidung</div>
               <div class="flex gap-4 items-start">
-                <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center text-xl shadow-lg">🧠</div>
+                <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center text-xl">🧩</div>
                 <h3 class="text-lg md:text-xl font-bold text-white leading-relaxed">${data.question}</h3>
               </div>
             </div>
           </div>
 
-          <div class="mt-8 grid gap-4">
+          <div class="grid gap-4">
             ${data.options.map((opt, i) => `
-              <div onclick="handleAnswer(${i})" class="option-card rounded-[24px] p-4 md:p-5 group">
+              <div onclick="handleAnswer(${i})" class="option-card">
                 <div class="flex items-start gap-4">
                   <div class="option-letter">${String.fromCharCode(65 + i)}</div>
-                  <div class="flex-1">
-                    <div class="text-slate-100 font-medium text-base md:text-lg leading-relaxed group-hover:text-white transition-colors">${opt.text}</div>
-                  </div>
-                  <div class="text-slate-400 group-hover:text-sky-300 transition-all group-hover:translate-x-1 text-2xl">→</div>
+                  <div class="flex-1 text-slate-100 text-lg leading-relaxed">${opt.text}</div>
+                  <div class="text-slate-400 text-2xl">→</div>
                 </div>
               </div>
             `).join('')}
@@ -520,23 +591,23 @@
       feedbackOverlay.classList.remove('hidden');
 
       if (opt.correct) {
-        feedbackCard.style.borderLeftColor = '#10b981';
-        feedbackTitle.innerText = 'Fachlich korrekt!';
-        feedbackTitle.className = 'text-2xl font-extrabold mb-2 text-emerald-400';
-        feedbackIcon.innerText = '✅';
+        feedbackCard.style.borderLeftColor = "#10b981";
+        feedbackTitle.innerText = "Die Tür öffnet sich";
+        feedbackTitle.className = "text-2xl font-extrabold mb-2 text-emerald-400";
+        feedbackIcon.innerText = "🚪";
         feedbackText.innerText = opt.feedback;
         updateWellbeing(5);
-        actionBtn.innerText = currentRoomIndex === gameData.length - 1 ? 'Zertifikat anzeigen' : 'Nächster Raum';
-        actionBtn.className = 'w-full mt-6 rounded-2xl py-4 px-6 font-bold text-lg btn-primary';
+        actionBtn.innerText = currentRoomIndex === gameData.length - 1 ? "Zum Ausgang" : "In den nächsten Raum";
+        actionBtn.className = "btn-main mt-6";
       } else {
-        feedbackCard.style.borderLeftColor = '#f43f5e';
-        feedbackTitle.innerText = 'Wichtiger Hinweis';
-        feedbackTitle.className = 'text-2xl font-extrabold mb-2 text-rose-400';
-        feedbackIcon.innerText = '⚠️';
+        feedbackCard.style.borderLeftColor = "#f43f5e";
+        feedbackTitle.innerText = "Die Tür bleibt verschlossen";
+        feedbackTitle.className = "text-2xl font-extrabold mb-2 text-rose-400";
+        feedbackIcon.innerText = "⚠️";
         feedbackText.innerText = opt.feedback;
         updateWellbeing(-20);
-        actionBtn.innerText = 'Nochmal versuchen';
-        actionBtn.className = 'w-full mt-6 rounded-2xl py-4 px-6 font-bold text-lg btn-secondary';
+        actionBtn.innerText = "Im Raum bleiben";
+        actionBtn.className = "btn-main btn-secondary mt-6";
       }
 
       actionBtn.onclick = () => {
@@ -554,14 +625,15 @@
     };
 
     function gameOver() {
-      renderProgressDots();
+      renderDoors();
       roomContent.innerHTML = `
-        <div class="text-center py-10 md:py-16 pop-in">
-          <div class="mx-auto mb-8 w-28 h-28 rounded-[30px] bg-rose-500/12 border border-rose-400/20 flex items-center justify-center text-6xl shadow-2xl">🚨</div>
-          <div class="inline-flex items-center gap-2 chip rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] mb-5">Simulation abgebrochen</div>
-          <h2 class="text-4xl md:text-5xl font-black text-rose-400 mb-5 tracking-tight">Patientengefährdung</h2>
-          <p class="text-slate-300 mb-10 text-lg max-w-2xl mx-auto leading-relaxed">In der Onkologie zählen Präzision, Beobachtung und Fachwissen. Das Wohlbefinden ist auf 0% gesunken. Wiederhole die Grundlagen und starte die Simulation neu.</p>
-          <button onclick="location.reload()" class="btn-primary rounded-2xl px-10 py-5 font-black text-lg">Neu starten</button>
+        <div class="text-center py-12 fade-slide">
+          <div class="text-7xl mb-6">🚨</div>
+          <h2 class="text-4xl md:text-5xl font-black text-rose-400 mb-5">Simulation gescheitert</h2>
+          <p class="text-slate-300 text-lg leading-relaxed max-w-2xl mx-auto mb-10">
+            Das Wohlbefinden des Patienten ist auf 0% gesunken. Du musst den Escape Room erneut betreten und präziser entscheiden.
+          </p>
+          <button onclick="location.reload()" class="btn-main max-w-md mx-auto">Neu starten</button>
         </div>
       `;
       feedbackOverlay.classList.add('hidden');
@@ -569,26 +641,27 @@
     }
 
     function victory() {
-      renderProgressDots();
+      renderDoors();
       roomContent.innerHTML = `
-        <div class="text-center py-10 md:py-16 pop-in">
-          <div class="mx-auto mb-8 w-28 h-28 rounded-[30px] bg-emerald-500/12 border border-emerald-400/20 flex items-center justify-center text-6xl shadow-2xl">🏆</div>
-          <div class="inline-flex items-center gap-2 chip rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] mb-5">Mission erfolgreich</div>
-          <h2 class="text-4xl md:text-5xl font-black text-emerald-400 mb-5 tracking-tight">Modul C2 bestanden</h2>
-          <p class="text-slate-300 mb-8 text-lg max-w-2xl mx-auto leading-relaxed">Du hast alle Herausforderungen im Schmerzmanagement und in der Onkologie gemeistert. Die Versorgung ist stabil und der Patient profitiert von deinen Entscheidungen.</p>
-          <div class="max-w-xl mx-auto rounded-[30px] p-6 md:p-8 border border-emerald-400/20 bg-emerald-500/10 mb-10">
-            <div class="text-xs uppercase tracking-[0.3em] font-bold text-emerald-300 mb-2">Finaler Score</div>
-            <div class="text-5xl md:text-6xl font-black text-white">${wellbeing}%</div>
-            <div class="text-emerald-200 mt-2 text-lg font-semibold">Patienten-Wohlbefinden</div>
+        <div class="text-center py-12 fade-slide">
+          <div class="text-7xl mb-6">🏆</div>
+          <h2 class="text-4xl md:text-5xl font-black text-emerald-400 mb-5">Escape Room geschafft</h2>
+          <p class="text-slate-300 text-lg leading-relaxed max-w-2xl mx-auto mb-8">
+            Du hast alle Räume erfolgreich durchquert und die klinischen Entscheidungen fachlich sauber gelöst.
+          </p>
+          <div class="max-w-xl mx-auto rounded-[28px] p-8 border border-emerald-400/20 bg-emerald-500/10 mb-10">
+            <div class="text-xs uppercase tracking-[0.3em] font-bold text-emerald-300 mb-2">Finaler Zustand</div>
+            <div class="text-6xl font-black text-white">${wellbeing}%</div>
+            <div class="text-lg text-emerald-200 mt-2">Patienten-Wohlbefinden</div>
           </div>
-          <button onclick="location.reload()" class="btn-primary rounded-2xl px-10 py-5 font-black text-lg">Neu starten</button>
+          <button onclick="location.reload()" class="btn-main max-w-md mx-auto">Noch einmal spielen</button>
         </div>
       `;
       feedbackOverlay.classList.add('hidden');
       roomContent.classList.remove('hidden');
     }
 
-    renderProgressDots();
+    renderDoors();
     renderRoom();
   </script>
 </body>
