@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FaGe Escape Room: Onkologie & Schmerz</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+    :root {
+      --bg-1: #0f172a;
+      --bg-2: #1e293b;
+      --accent: #38bdf8;
+      --accent-2: #8b5cf6;
+      --good: #10b981;
+      --warn: #f59e0b;
+      --bad: #f43f5e;
+      --card: rgba(15, 23, 42, 0.72);
+      --stroke: rgba(255,255,255,0.1);
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      min-height: 100%;
+      margin: 0;
+      font-family: 'Outfit', sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 20%, rgba(56, 189, 248, 0.18), transparent 26%),
+        radial-gradient(circle at 90% 10%, rgba(139, 92, 246, 0.18), transparent 24%),
+        radial-gradient(circle at 80% 80%, rgba(16, 185, 129, 0.14), transparent 20%),
+        linear-gradient(135deg, #020617 0%, #0f172a 35%, #111827 100%);
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: radial-gradient(circle at center, black 45%, transparent 95%);
+      opacity: 0.35;
+    }
+
+    .glass-panel {
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.78), rgba(15, 23, 42, 0.62));
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border: 1px solid var(--stroke);
+      box-shadow:
+        0 20px 60px rgba(2, 6, 23, 0.45),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+    }
+
+    .glow-ring {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .glow-ring::before {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(56,189,248,0.6), rgba(139,92,246,0.4), rgba(16,185,129,0.4));
+      -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      z-index: -1;
+      opacity: 0.9;
+    }
+
+    .fade-in {
+      animation: fadeIn 0.45s ease-out forwards;
+    }
+
+    .pop-in {
+      animation: popIn 0.35s ease-out forwards;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .health-bar-transition {
+      transition: width 0.8s cubic-bezier(0.65, 0, 0.35, 1), background 0.3s ease;
+    }
+
+    .option-card {
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
+      transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+      cursor: pointer;
+    }
+
+    .option-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, transparent 0%, rgba(255,255,255,0.08) 45%, transparent 100%);
+      transform: translateX(-120%);
+      transition: transform 0.6s ease;
+    }
+
+    .option-card:hover {
+      transform: translateY(-2px) scale(1.01);
+      border-color: rgba(56,189,248,0.45);
+      box-shadow: 0 14px 32px rgba(2, 132, 199, 0.16);
+      background: linear-gradient(180deg, rgba(56,189,248,0.1), rgba(255,255,255,0.04));
+    }
+
+    .option-card:hover::before {
+      transform: translateX(120%);
+    }
+
+    .option-letter {
+      min-width: 44px;
+      min-height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 14px;
+      background: linear-gradient(180deg, rgba(56,189,248,0.22), rgba(59,130,246,0.12));
+      border: 1px solid rgba(56,189,248,0.25);
+      color: #e0f2fe;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+    }
+
+    .chip {
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      color: #cbd5e1;
+    }
+
+    .progress-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.18);
+      transition: all 0.3s ease;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.12);
+    }
+
+    .progress-dot.active {
+      width: 30px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #38bdf8, #8b5cf6);
+      box-shadow: 0 0 20px rgba(56,189,248,0.35);
+    }
+
+    .progress-dot.done {
+      background: rgba(16,185,129,0.9);
+      box-shadow: 0 0 16px rgba(16,185,129,0.28);
+    }
+
+    .pulse-orb {
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: #10b981;
+      box-shadow: 0 0 0 0 rgba(16,185,129,0.7);
+      animation: pulseOrb 2s infinite;
+    }
+
+    @keyframes pulseOrb {
+      0% { box-shadow: 0 0 0 0 rgba(16,185,129,0.45); }
+      70% { box-shadow: 0 0 0 12px rgba(16,185,129,0); }
+      100% { box-shadow: 0 0 0 0 rgba(16,185,129,0); }
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #38bdf8, #8b5cf6);
+      color: white;
+      box-shadow: 0 18px 30px rgba(56,189,248,0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 22px 36px rgba(56,189,248,0.28);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.06);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.1);
+    }
+
+    .wellbeing-shell {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .wellbeing-track {
+      background: rgba(255,255,255,0.08);
+      box-shadow: inset 0 2px 8px rgba(2,6,23,0.28);
+    }
+
+    .wellbeing-fill {
+      background: linear-gradient(90deg, #10b981 0%, #34d399 50%, #6ee7b7 100%);
+      box-shadow: 0 0 24px rgba(16,185,129,0.35);
+    }
+
+    .wellbeing-fill.warn {
+      background: linear-gradient(90deg, #f59e0b 0%, #fbbf24 100%);
+      box-shadow: 0 0 24px rgba(245,158,11,0.28);
+    }
+
+    .wellbeing-fill.bad {
+      background: linear-gradient(90deg, #f43f5e 0%, #fb7185 100%);
+      box-shadow: 0 0 24px rgba(244,63,94,0.28);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 md:p-8">
+  <div id="game-container" class="max-w-5xl w-full fade-in">
+
+    <div class="grid lg:grid-cols-[1.15fr_0.85fr] gap-6 mb-6">
+      <div class="glass-panel glow-ring rounded-[32px] p-6 md:p-7">
+        <div class="flex flex-wrap items-start justify-between gap-4 mb-6">
+          <div>
+            <div class="inline-flex items-center gap-2 chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.25em] mb-4">
+              <span class="pulse-orb"></span>
+              Simulationsmodus aktiv
+            </div>
+            <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-white">Escape Room: Modul C2</h1>
+            <p class="text-slate-300 mt-2 text-sm md:text-base">Onkologie, Schmerzmanagement und klinische Entscheidungen für FaGe-Lernende</p>
+          </div>
+          <div id="room-badge" class="rounded-2xl px-5 py-3 bg-white/6 border border-white/10 text-white font-bold tracking-[0.18em] text-sm shadow-2xl">
+            RAUM 1 / 5
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 mb-6" id="progress-dots"></div>
+
+        <div class="wellbeing-shell rounded-3xl p-4 md:p-5">
+          <div class="flex items-center justify-between gap-4 mb-3">
+            <div>
+              <div class="text-xs uppercase tracking-[0.25em] font-bold text-slate-400">Patienten-Wohlbefinden</div>
+              <div class="text-sm text-slate-300 mt-1">Jede Entscheidung beeinflusst Sicherheit und Versorgung.</div>
+            </div>
+            <div id="wellbeing-percent" class="text-3xl font-black text-white">100%</div>
+          </div>
+          <div class="wellbeing-track rounded-full h-5 p-1 overflow-hidden">
+            <div id="health-bar" class="health-bar-transition wellbeing-fill h-full rounded-full" style="width: 100%"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass-panel rounded-[32px] p-6 md:p-7">
+        <div class="text-xs uppercase tracking-[0.25em] font-bold text-slate-400 mb-4">Mission Briefing</div>
+        <div class="space-y-4 text-slate-300 leading-relaxed text-sm md:text-base">
+          <div class="chip rounded-2xl px-4 py-3">
+            <span class="font-bold text-white">Ziel:</span> Räume mit fachlich korrekten Entscheidungen abschliessen.
+          </div>
+          <div class="chip rounded-2xl px-4 py-3">
+            <span class="font-bold text-white">Gefahr:</span> Falsche Antworten senken das Wohlbefinden des Patienten.
+          </div>
+          <div class="chip rounded-2xl px-4 py-3">
+            <span class="font-bold text-white">Bonus:</span> Richtige Antworten stabilisieren den Patienten und bringen dich ins nächste Level.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="room-content" class="glass-panel glow-ring rounded-[32px] p-6 md:p-8 min-h-[500px] flex flex-col pop-in">
+      <!-- Dynamic content -->
+    </div>
+
+    <div id="feedback-overlay" class="mt-6 hidden fade-in">
+      <div id="feedback-card" class="glass-panel rounded-[32px] p-6 md:p-8 shadow-2xl border-l-[10px]">
+        <div class="flex items-start gap-4 mb-4">
+          <div id="feedback-icon" class="text-5xl leading-none"></div>
+          <div>
+            <div id="feedback-title" class="text-2xl font-extrabold mb-2 text-white"></div>
+            <p id="feedback-text" class="text-slate-300 leading-relaxed text-base md:text-lg"></p>
+          </div>
+        </div>
+        <button id="action-btn" class="w-full mt-6 rounded-2xl py-4 px-6 font-bold text-lg btn-primary">
+          Weiter
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const gameData = [
+      {
+        title: "Raum 1: Schmerzentstehung & Schmerzarten",
+        description: "Ein Patient mit einem Tumor im Bereich der Lendenwirbelsäule beschreibt seine Schmerzen als 'elektrisierend, brennend und einschiessend'. Er gibt an, dass die Schmerzen bis in das linke Bein ausstrahlen.",
+        question: "Welche Schmerzart liegt hier primär vor und wie wird dieser Schmerz im Nervensystem begründet?",
+        options: [
+          {
+            text: "Nozizeptiver Schmerz; ausgelöst durch eine Entzündung im Gewebe.",
+            correct: false,
+            feedback: "Nicht ganz korrekt. Nozizeptiver Schmerz wird meist als dumpf, pochend oder stechend beschrieben. Das 'Einschiessen' und 'Brennen' deutet auf eine direkte Schädigung von Nervenfasern hin."
+          },
+          {
+            text: "Neuropathischer Schmerz; verursacht durch die Schädigung oder Kompression von Nervenstrukturen.",
+            correct: true,
+            feedback: "Richtig! Die beschriebene Qualität (brennend, einschiessend) ist typisch für neuropathischen Schmerz. In der Onkologie geschieht dies oft durch das Einwachsen oder Drücken des Tumors auf Nervenbahnen."
+          },
+          {
+            text: "Psychosomatischer Schmerz; bedingt durch die psychische Belastung der Diagnose.",
+            correct: false,
+            feedback: "Falsch. Auch wenn Krebs psychisch belastend ist, haben diese spezifischen Symptome eine klare physiologische Ursache im Nervensystem (Nervenschädigung)."
+          }
+        ]
+      },
+      {
+        title: "Raum 2: Nozizeption & Assessment",
+        description: "Du führst ein Schmerzassessment durch. Du weisst, dass die Schmerzentstehung mit der Umwandlung von Reizen beginnt.",
+        question: "Wie heissen die spezialisierten Rezeptoren für Schmerzreize und welches Instrument ist am besten geeignet, um die Intensität bei einem kognitiv fitten Patienten zu erfassen?",
+        options: [
+          {
+            text: "Mechanorezeptoren; wir nutzen die Visuelle Analogskala (VAS).",
+            correct: false,
+            feedback: "Nicht ganz. Mechanorezeptoren reagieren auf Druck. Die VAS ist zwar möglich, aber die Numerische Rating-Skala (NRS) ist im klinischen Alltag oft noch praktikabler."
+          },
+          {
+            text: "Nozizeptoren; wir nutzen die Numerische Rating-Skala (NRS 0-10).",
+            correct: true,
+            feedback: "Exzellent! Nozizeptoren sind die freien Nervenendigungen, die Schmerzreize aufnehmen. Die NRS ist das Standardinstrument für das Assessment der Schmerzintensität."
+          },
+          {
+            text: "Propriozeptoren; wir nutzen das BESD-Instrument.",
+            correct: false,
+            feedback: "Falsch. Propriozeptoren dienen der Eigenwahrnehmung des Körpers. BESD wird bei Menschen mit Demenz eingesetzt, nicht bei kognitiv fitten Patienten."
+          }
+        ]
+      },
+      {
+        title: "Raum 3: WHO-Stufenschema & Opioide",
+        description: "Der Patient hat starke Schmerzen (NRS 8). Er wird gemäss WHO-Stufe 3 mit starken Opioiden (z.B. Morphin) behandelt.",
+        question: "Als FaGe überwachst du die Therapie. Welche Nebenwirkung tritt bei Opioiden fast ausnahmslos auf und erfordert eine pflegerische Intervention?",
+        options: [
+          {
+            text: "Obstipation (Verstopfung).",
+            correct: true,
+            feedback: "Richtig! Opioide hemmen die Darmperistaltik. Deshalb muss ab dem ersten Tag der Opioidgabe eine konsequente Obstipationsprophylaxe (z.B. Laxantien, Bewegung) durchgeführt werden."
+          },
+          {
+            text: "Atembeschleunigung (Tachypnoe).",
+            correct: false,
+            feedback: "Falsch. Opioide können bei Überdosierung eher eine Atemdepression (verlangsamte Atmung) auslösen, aber keine Beschleunigung."
+          },
+          {
+            text: "Heisshungerattacken.",
+            correct: false,
+            feedback: "Falsch. Eher sind Übelkeit und Erbrechen zu Beginn der Therapie häufige Nebenwirkungen, nicht Heisshunger."
+          }
+        ]
+      },
+      {
+        title: "Raum 4: Pflege bei Mammakarzinom",
+        description: "Eine Patientin wurde nach einem Mammakarzinom mastektomiert. Es wurden mehrere Lymphknoten in der Achselhöhle entfernt.",
+        question: "Welche pflegerische Massnahme ist zur Vermeidung eines Lymphödems am betroffenen Arm zwingend zu beachten?",
+        options: [
+          {
+            text: "Blutdruckmessungen nur noch am betroffenen Arm durchführen.",
+            correct: false,
+            feedback: "Absolut falsch! Das ist lebensgefährlich für das Gewebe. Jede Abschnürung oder Verletzung am betroffenen Arm kann ein irreversibles Lymphödem auslösen."
+          },
+          {
+            text: "Den Arm hochlagern und Blutentnahmen an dieser Seite strikt vermeiden.",
+            correct: true,
+            feedback: "Richtig! Der Arm muss vor Stauung (Blutdruckmanschette) und Infektionen (Blutentnahme) geschützt werden. Hochlagerung fördert den Abfluss."
+          },
+          {
+            text: "Kräftige Massagen des Arms zur Durchblutungsförderung.",
+            correct: false,
+            feedback: "Falsch. Nur eine spezialisierte manuelle Lymphdrainage ist erlaubt. Normale Massagen können den Lymphstau verschlimmern."
+          }
+        ]
+      },
+      {
+        title: "Raum 5: Ethik in der Onkologie",
+        description: "Ein Patient im Endstadium eines Prostatakarzinoms lehnt eine lebensverlängernde Massnahme ab. Er möchte lieber nach Hause.",
+        question: "Welches ethische Prinzip steht hier im Vordergrund, wenn wir seine Entscheidung respektieren?",
+        options: [
+          {
+            text: "Prinzip der Gerechtigkeit.",
+            correct: false,
+            feedback: "Nicht zutreffend. Gerechtigkeit bezieht sich auf die faire Verteilung von Pflege und Ressourcen."
+          },
+          {
+            text: "Prinzip der Autonomie (Selbstbestimmung).",
+            correct: true,
+            feedback: "Korrekt! Die Autonomie ist das Recht des Patienten, über seinen eigenen Körper und seine Behandlung zu entscheiden – auch gegen medizinischen Rat."
+          },
+          {
+            text: "Prinzip der Nicht-Schädigung gegen den Patientenwillen.",
+            correct: false,
+            feedback: "Falsch. Das Prinzip besagt zwar 'Nicht schaden', aber die Autonomie des urteilsfähigen Patienten überwiegt hier die medizinische Sichtweise."
+          }
+        ]
+      }
+    ];
+
+    let currentRoomIndex = 0;
+    let wellbeing = 100;
+
+    const roomContent = document.getElementById('room-content');
+    const feedbackOverlay = document.getElementById('feedback-overlay');
+    const feedbackCard = document.getElementById('feedback-card');
+    const feedbackText = document.getElementById('feedback-text');
+    const feedbackTitle = document.getElementById('feedback-title');
+    const feedbackIcon = document.getElementById('feedback-icon');
+    const actionBtn = document.getElementById('action-btn');
+    const healthBar = document.getElementById('health-bar');
+    const wellbeingPercent = document.getElementById('wellbeing-percent');
+    const roomBadge = document.getElementById('room-badge');
+    const progressDots = document.getElementById('progress-dots');
+
+    function renderProgressDots() {
+      progressDots.innerHTML = gameData.map((_, i) => {
+        let cls = 'progress-dot';
+        if (i < currentRoomIndex) cls += ' done';
+        if (i === currentRoomIndex) cls += ' active';
+        return `<div class="${cls}"></div>`;
+      }).join('');
+    }
+
+    function updateWellbeing(change) {
+      wellbeing = Math.max(0, Math.min(100, wellbeing + change));
+      healthBar.style.width = wellbeing + '%';
+      wellbeingPercent.innerText = wellbeing + '%';
+
+      healthBar.className = 'health-bar-transition h-full rounded-full';
+      if (wellbeing > 60) {
+        healthBar.classList.add('wellbeing-fill');
+      } else if (wellbeing > 30) {
+        healthBar.classList.add('wellbeing-fill', 'warn');
+      } else {
+        healthBar.classList.add('wellbeing-fill', 'bad');
+      }
+
+      if (wellbeing <= 0) gameOver();
+    }
+
+    function renderRoom() {
+      const data = gameData[currentRoomIndex];
+      roomBadge.innerText = `RAUM ${currentRoomIndex + 1} / ${gameData.length}`;
+      renderProgressDots();
+
+      roomContent.innerHTML = `
+        <div class="flex flex-col h-full pop-in">
+          <div class="flex flex-wrap items-start justify-between gap-4 mb-8">
+            <div>
+              <div class="inline-flex items-center gap-2 chip rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] mb-4">Klinischer Entscheidungsraum</div>
+              <h2 class="text-3xl md:text-4xl font-extrabold text-white tracking-tight leading-tight">${data.title}</h2>
+            </div>
+            <div class="chip rounded-2xl px-4 py-3 text-sm font-semibold">Schwierigkeit steigt</div>
+          </div>
+
+          <div class="grid md:grid-cols-[1.15fr_0.85fr] gap-6 flex-grow">
+            <div class="rounded-[28px] p-6 border border-white/10 bg-white/5">
+              <div class="text-xs uppercase tracking-[0.25em] font-bold text-sky-300 mb-4">Fallsituation</div>
+              <p class="text-slate-200 leading-relaxed text-base md:text-lg">${data.description}</p>
+            </div>
+
+            <div class="rounded-[28px] p-6 border border-white/10 bg-gradient-to-br from-sky-500/10 to-violet-500/10">
+              <div class="text-xs uppercase tracking-[0.25em] font-bold text-violet-300 mb-4">Deine Aufgabe</div>
+              <div class="flex gap-4 items-start">
+                <div class="w-12 h-12 rounded-2xl bg-white/10 border border-white/10 flex items-center justify-center text-xl shadow-lg">🧠</div>
+                <h3 class="text-lg md:text-xl font-bold text-white leading-relaxed">${data.question}</h3>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-8 grid gap-4">
+            ${data.options.map((opt, i) => `
+              <div onclick="handleAnswer(${i})" class="option-card rounded-[24px] p-4 md:p-5 group">
+                <div class="flex items-start gap-4">
+                  <div class="option-letter">${String.fromCharCode(65 + i)}</div>
+                  <div class="flex-1">
+                    <div class="text-slate-100 font-medium text-base md:text-lg leading-relaxed group-hover:text-white transition-colors">${opt.text}</div>
+                  </div>
+                  <div class="text-slate-400 group-hover:text-sky-300 transition-all group-hover:translate-x-1 text-2xl">→</div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+
+      roomContent.classList.remove('hidden');
+      feedbackOverlay.classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    window.handleAnswer = function(idx) {
+      const opt = gameData[currentRoomIndex].options[idx];
+      roomContent.classList.add('hidden');
+      feedbackOverlay.classList.remove('hidden');
+
+      if (opt.correct) {
+        feedbackCard.style.borderLeftColor = '#10b981';
+        feedbackTitle.innerText = 'Fachlich korrekt!';
+        feedbackTitle.className = 'text-2xl font-extrabold mb-2 text-emerald-400';
+        feedbackIcon.innerText = '✅';
+        feedbackText.innerText = opt.feedback;
+        updateWellbeing(5);
+        actionBtn.innerText = currentRoomIndex === gameData.length - 1 ? 'Zertifikat anzeigen' : 'Nächster Raum';
+        actionBtn.className = 'w-full mt-6 rounded-2xl py-4 px-6 font-bold text-lg btn-primary';
+      } else {
+        feedbackCard.style.borderLeftColor = '#f43f5e';
+        feedbackTitle.innerText = 'Wichtiger Hinweis';
+        feedbackTitle.className = 'text-2xl font-extrabold mb-2 text-rose-400';
+        feedbackIcon.innerText = '⚠️';
+        feedbackText.innerText = opt.feedback;
+        updateWellbeing(-20);
+        actionBtn.innerText = 'Nochmal versuchen';
+        actionBtn.className = 'w-full mt-6 rounded-2xl py-4 px-6 font-bold text-lg btn-secondary';
+      }
+
+      actionBtn.onclick = () => {
+        if (opt.correct) {
+          if (currentRoomIndex < gameData.length - 1) {
+            currentRoomIndex++;
+            renderRoom();
+          } else {
+            victory();
+          }
+        } else {
+          renderRoom();
+        }
+      };
+    };
+
+    function gameOver() {
+      renderProgressDots();
+      roomContent.innerHTML = `
+        <div class="text-center py-10 md:py-16 pop-in">
+          <div class="mx-auto mb-8 w-28 h-28 rounded-[30px] bg-rose-500/12 border border-rose-400/20 flex items-center justify-center text-6xl shadow-2xl">🚨</div>
+          <div class="inline-flex items-center gap-2 chip rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] mb-5">Simulation abgebrochen</div>
+          <h2 class="text-4xl md:text-5xl font-black text-rose-400 mb-5 tracking-tight">Patientengefährdung</h2>
+          <p class="text-slate-300 mb-10 text-lg max-w-2xl mx-auto leading-relaxed">In der Onkologie zählen Präzision, Beobachtung und Fachwissen. Das Wohlbefinden ist auf 0% gesunken. Wiederhole die Grundlagen und starte die Simulation neu.</p>
+          <button onclick="location.reload()" class="btn-primary rounded-2xl px-10 py-5 font-black text-lg">Neu starten</button>
+        </div>
+      `;
+      feedbackOverlay.classList.add('hidden');
+      roomContent.classList.remove('hidden');
+    }
+
+    function victory() {
+      renderProgressDots();
+      roomContent.innerHTML = `
+        <div class="text-center py-10 md:py-16 pop-in">
+          <div class="mx-auto mb-8 w-28 h-28 rounded-[30px] bg-emerald-500/12 border border-emerald-400/20 flex items-center justify-center text-6xl shadow-2xl">🏆</div>
+          <div class="inline-flex items-center gap-2 chip rounded-full px-4 py-2 text-xs font-semibold uppercase tracking-[0.25em] mb-5">Mission erfolgreich</div>
+          <h2 class="text-4xl md:text-5xl font-black text-emerald-400 mb-5 tracking-tight">Modul C2 bestanden</h2>
+          <p class="text-slate-300 mb-8 text-lg max-w-2xl mx-auto leading-relaxed">Du hast alle Herausforderungen im Schmerzmanagement und in der Onkologie gemeistert. Die Versorgung ist stabil und der Patient profitiert von deinen Entscheidungen.</p>
+          <div class="max-w-xl mx-auto rounded-[30px] p-6 md:p-8 border border-emerald-400/20 bg-emerald-500/10 mb-10">
+            <div class="text-xs uppercase tracking-[0.3em] font-bold text-emerald-300 mb-2">Finaler Score</div>
+            <div class="text-5xl md:text-6xl font-black text-white">${wellbeing}%</div>
+            <div class="text-emerald-200 mt-2 text-lg font-semibold">Patienten-Wohlbefinden</div>
+          </div>
+          <button onclick="location.reload()" class="btn-primary rounded-2xl px-10 py-5 font-black text-lg">Neu starten</button>
+        </div>
+      `;
+      feedbackOverlay.classList.add('hidden');
+      roomContent.classList.remove('hidden');
+    }
+
+    renderProgressDots();
+    renderRoom();
+  </script>
+</body>
+</html>
